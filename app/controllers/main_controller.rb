@@ -32,8 +32,9 @@ class MainController < ApplicationController
           )
       end
     end
-        # ObjectStateForm.new(object_state_params).save
+
         # redirect_to object_states_path
+        # ObjectStateForm.new(object_state_params).save
         # redirect_to root_url, notice: "Products imported."
   end
 
