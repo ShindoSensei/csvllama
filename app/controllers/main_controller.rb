@@ -1,55 +1,53 @@
 class MainController < ApplicationController
-# before_action :prepare_search_form, only: [:index]
-
   def index
     #Display homepage
   end
 
-  def import
+  def import_csv
     require 'csv'
     File.foreach(params[:file].path, headers:true) do |csv_line|
       row = CSV.parse(csv_line.gsub('\"', '""')).first #For RubyCSV's inability to recognise escapes
       if row[1] == "Order"
-        Order.find_or_create_by(id:row[0])  #Creates new order if non-existent
-          OrderUpdate.create(
-            order_id: row[0],
-            time_stamp: row[2],
-            object_changes: JSON.parse(row[3])
-          )
+        Order.find_or_create_by(id:row[0]) #Creates new order if non-existent
+        OrderUpdate.create(
+          order_id: row[0],
+          time_stamp: row[2],
+          object_changes: JSON.parse(row[3])
+        )
       elsif row[1] == "Invoice"
         Invoice.find_or_create_by(id:row[0])
-          InvoiceUpdate.create(
-            invoice_id: row[0],
-            time_stamp: row[2],
-            object_changes: JSON.parse(row[3])
-          )
+        InvoiceUpdate.create(
+          invoice_id: row[0],
+          time_stamp: row[2],
+          object_changes: JSON.parse(row[3])
+        )
       elsif row[1] == "Product"
         Product.find_or_create_by(id:row[0])
-          ProductUpdate.create(
+        ProductUpdate.create(
           product_id: row[0],
           time_stamp: row[2],
           object_changes: JSON.parse(row[3])
-          )
+        )
       end
     end
-
-        # redirect_to object_states_path
-        # ObjectStateForm.new(object_state_params).save
-        # redirect_to root_url, notice: "Products imported."
+    redirect_to root_path
   end
 
-  def search
-
+  def search_state
+    updates_array = []
+    if params[:object_type] == 'Order'
+      updates_array = OrderUpdate.where("order_id = ? AND time_stamp <= ?", params[:object_id], params[:time_stamp]).order(:time_stamp)
+    elsif params[:object_type] == 'Invoice'
+      updates_array = InvoiceUpdate.where("invoice_id = ? AND time_stamp <= ?", params[:object_id], params[:time_stamp]).order(:time_stamp)
+    elsif params[:object_type] == 'Product'
+      updates_array = ProductUpdate.where("product_id = ? AND time_stamp <= ?", params[:object_id], params[:time_stamp]).order(:time_stamp)
+    end
+    if updates_array.empty?
+      @object_state = {}
+    else
+      object_changes_array = updates_array.map{|obj| obj.obj_changes}
+      @object_state = object_changes_array.reduce(&:merge)
+    end
   end
 
-  private
-
-  def object_state_params
-    # params.require(:file_upload).permit(:csv)
-  end
-
-  def prepare_search_form
-    # search_params = params[:search_form].present? ? params[:search_form].permit(:object_id, :object_type, :timestamp) : {}
-    # @search_form = SearchForm.new(search_params)
-  end
 end

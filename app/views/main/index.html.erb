@@ -1,9 +1,11 @@
 <h1>Welcome to CSVLlama</h1>
-<div>
 <h3>Import a CSV File</h3>
   <%= form_tag import_csv_path, multipart: true do %>
     <%= file_field_tag :file %>
     <%= submit_tag "Upload CSV" %>
   <% end %>
+<h3>Query States</h3>
+  <%= form_tag search_state_path, multipart: true do %>
 
-</div>
+  <%= submit_tag "Search" %>
+<% end %>
