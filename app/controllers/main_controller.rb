@@ -7,8 +7,8 @@ class MainController < ApplicationController
 
   def import_csv
     require 'csv'
-    if params[:file]
-      File.foreach(params[:file].path, headers:true) do |csv_line|
+    if params[:file_upload]
+      File.foreach(params[:file_upload].path, headers:true) do |csv_line|
         row = CSV.parse(csv_line.gsub('\"', '""')).first #For RubyCSV's inability to recognise escapes
         if row[1] == "Order"
           Order.find_or_create_by(id:row[0]) #Creates new order if non-existent

@@ -18,9 +18,9 @@ ActiveRecord::Schema.define(version: 20170527150305) do
   create_table "invoice_updates", force: :cascade do |t|
     t.integer  "invoice_id"
     t.integer  "time_stamp"
-    t.json     "object_changes"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.json     "object_changes", default: {}
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.index ["invoice_id"], name: "index_invoice_updates_on_invoice_id", using: :btree
   end
 
@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(version: 20170527150305) do
   create_table "order_updates", force: :cascade do |t|
     t.integer  "order_id"
     t.integer  "time_stamp"
-    t.json     "object_changes"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.json     "object_changes", default: {}
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.index ["order_id"], name: "index_order_updates_on_order_id", using: :btree
   end
 
@@ -46,9 +46,9 @@ ActiveRecord::Schema.define(version: 20170527150305) do
   create_table "product_updates", force: :cascade do |t|
     t.integer  "product_id"
     t.integer  "time_stamp"
-    t.json     "object_changes"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.json     "object_changes", default: {}
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.index ["product_id"], name: "index_product_updates_on_product_id", using: :btree
   end
 
