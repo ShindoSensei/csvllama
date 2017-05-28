@@ -11,10 +11,10 @@
   <%= select_tag(:object_type, options_for_select([['Order', 'Order'], ['Invoice', 'Invoice'], ['Product', 'Product']]))%>
   <br><br>
   <%= label_tag(:object_id, "Object Id:") %>
-  <%= number_field_tag(:object_id) %>
+  <%= number_field_tag(:object_id, nil, min:1, step:1, required:true) %>
   <br><br>
   <%= label_tag(:time_stamp, "Timestamp:") %>
-  <%= number_field_tag(:time_stamp) %>
+  <%= number_field_tag(:time_stamp, nil, min:0, step:1, required:true) %>
   <br><br>
   <%= submit_tag "Search" %>
 <% end %>
