@@ -1,6 +1,8 @@
 class MainController < ApplicationController
   def index
-    #Display homepage
+    respond_to do |format|
+      format.html { render :index, locals:{ajax_render:''} }
+    end
   end
 
   def import_csv
@@ -45,9 +47,13 @@ class MainController < ApplicationController
     if updates_array.empty?
       @object_state = {}
     else
-      object_changes_array = updates_array.map{|obj| obj.obj_changes}
+      object_changes_array = updates_array.map{|update| update.object_changes}
       @object_state = object_changes_array.reduce(&:merge)
     end
+    respond_to do |format|
+      format.js { render :index}
+    end
+
   end
 
 end

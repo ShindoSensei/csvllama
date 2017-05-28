@@ -1,11 +1,25 @@
 <h1>Welcome to CSVLlama</h1>
-<h3>Import a CSV File</h3>
-  <%= form_tag import_csv_path, multipart: true do %>
-    <%= file_field_tag :file %>
-    <%= submit_tag "Upload CSV" %>
-  <% end %>
+<h3>Upload a CSV File</h3>
+<%= form_tag import_csv_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Upload CSV" %>
+<% end %>
+<br>
 <h3>Query States</h3>
-  <%= form_tag search_state_path, multipart: true do %>
-
+<%= form_tag search_state_path(format: :js), multipart: true, remote: true do %>
+  <%= label_tag(:object_type, "Object Type:") %>
+  <%= select_tag(:object_type, options_for_select([['Order', 'Order'], ['Invoice', 'Invoice'], ['Product', 'Product']]))%>
+  <br><br>
+  <%= label_tag(:object_id, "Object Id:") %>
+  <%= number_field_tag(:object_id) %>
+  <br><br>
+  <%= label_tag(:time_stamp, "Timestamp:") %>
+  <%= number_field_tag(:time_stamp) %>
+  <br><br>
   <%= submit_tag "Search" %>
 <% end %>
+<br>
+<h3>Result:</h3>
+<div id="resultContainer">
+  <%= ajax_render%>
+</div>
