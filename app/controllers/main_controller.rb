@@ -1,7 +1,7 @@
 class MainController < ApplicationController
   def index
     respond_to do |format|
-      format.html { render :index, locals:{ajax_render:''} }
+      format.html { render :index}
     end
   end
 
@@ -37,14 +37,14 @@ class MainController < ApplicationController
     redirect_to root_path
   end
 
-  def search_state
+  def prepare_obj(obj,id,time)
     updates_array = []
-    if params[:object_type] == 'Order'
-      updates_array = OrderUpdate.where("order_id = ? AND time_stamp <= ?", params[:object_id], params[:time_stamp]).order(:time_stamp)
-    elsif params[:object_type] == 'Invoice'
-      updates_array = InvoiceUpdate.where("invoice_id = ? AND time_stamp <= ?", params[:object_id], params[:time_stamp]).order(:time_stamp)
-    elsif params[:object_type] == 'Product'
-      updates_array = ProductUpdate.where("product_id = ? AND time_stamp <= ?", params[:object_id], params[:time_stamp]).order(:time_stamp)
+    if obj == 'Order'
+      updates_array = OrderUpdate.where("order_id = ? AND time_stamp <= ?", id, time).order(:time_stamp)
+    elsif obj == 'Invoice'
+      updates_array = InvoiceUpdate.where("invoice_id = ? AND time_stamp <= ?", id, time).order(:time_stamp)
+    elsif obj == 'Product'
+      updates_array = ProductUpdate.where("product_id = ? AND time_stamp <= ?", id, time).order(:time_stamp)
     end
     if updates_array.empty?
       @object_state = {}
@@ -52,6 +52,10 @@ class MainController < ApplicationController
       object_changes_array = updates_array.map{|update| update.object_changes}
       @object_state = object_changes_array.reduce(&:merge)
     end
+  end
+
+  def search_state
+    prepare_obj(params[:object_type],params[:object_id],params[:time_stamp])
     respond_to do |format|
       format.js { render :index}
     end
